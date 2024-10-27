@@ -29,9 +29,9 @@ def get_driver():
         print(f"WebDriver initialization failed: {e}")
         return None
 
-medicine_name = ["Crocin", "diflucan", "Palbomed 75mg Capsule", "Pan D"]
+#medicine_name = ["Crocin", "diflucan", "Palbomed 75mg Capsule", "Pan D"]
 
-def fetchpharmeasy():
+def fetchpharmeasy(medicine_name):
     driver = get_driver()
     if not driver:
         return {"error": "Failed to initialize WebDriver for Pharmeasy"}
@@ -40,7 +40,7 @@ def fetchpharmeasy():
         driver.get("https://www.google.com/")
         driver.implicitly_wait(5)
         input_element = driver.find_element(By.NAME, "q")
-        input_element.send_keys(f"{medicine_name[3]}" + " " + "pharmeasy" + Keys.ENTER)
+        input_element.send_keys(f"{medicine_name}" + " " + "pharmeasy" + Keys.ENTER)
         first_link = driver.find_element(By.CSS_SELECTOR, "div#search a")
         first_link_url = first_link.get_attribute("href")
         driver.get(first_link_url)
@@ -101,7 +101,7 @@ def fetchpharmeasy():
         "price": price
     }
 
-def fetch1mg():
+def fetch1mg(medicine_name):
     driver = get_driver()
     if not driver:
         return {"error": "Failed to initialize WebDriver for 1mg"}
@@ -110,7 +110,7 @@ def fetch1mg():
         driver.get("https://www.google.com/")
         driver.implicitly_wait(5)
         input_element = driver.find_element(By.NAME, "q")
-        input_element.send_keys(f"{medicine_name[3]}" + " " + "1mg" + Keys.ENTER)
+        input_element.send_keys(f"{medicine_name}" + " " + "1mg" + Keys.ENTER)
         first_link = driver.find_element(By.CSS_SELECTOR, "div#search a")
         first_link_url = first_link.get_attribute("href")
         driver.get(first_link_url)
@@ -166,7 +166,7 @@ def fetch1mg():
         "price": price
     }
 
-def fetchnetmeds():
+def fetchnetmeds(medicine_name):
     driver = get_driver()
     if not driver:
         return {"error": "Failed to initialize WebDriver for Netmeds"}
@@ -175,7 +175,7 @@ def fetchnetmeds():
         driver.get("https://www.google.com/")
         driver.implicitly_wait(5)
         input_element = driver.find_element(By.NAME, "q")
-        input_element.send_keys(f"{medicine_name[3]}" + " " + "netmeds" + Keys.ENTER)
+        input_element.send_keys(f"{medicine_name}" + " " + "netmeds" + Keys.ENTER)
         first_link = driver.find_element(By.CSS_SELECTOR, "div#search a")
         first_link_url = first_link.get_attribute("href")
         driver.get(first_link_url)
@@ -231,12 +231,12 @@ def fetchnetmeds():
         "price": price
     }
 
-@app.route('/get_medicine_data', methods=['GET'])
-def get_medicine_data():
+@app.route('/<medicine_name>', methods=['GET'])
+def get_medicine_data(medicine_name):
     results = []
-    results.append(fetchpharmeasy())
-    results.append(fetch1mg())
-    results.append(fetchnetmeds())
+    results.append(fetchpharmeasy(medicine_name))
+    results.append(fetch1mg(medicine_name))
+    results.append(fetchnetmeds(medicine_name))
     
     return jsonify({"data": results})
 
